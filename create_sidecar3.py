@@ -1,0 +1,6 @@
+# Python script to create side-car files for RawTherapee CLI batch processing# Notepad++ line to run: cmd /K "$(FULL_CURRENT_PATH)"import osDEBUG = 1MYPATH = 'd:/incoming/images/2017-11-11'# First let's just try to loop through brightness# Section header for pp3 fileHEADER1 = '[Exposure]'VALUE1 = 'Compensation'VALUE2 = 'Black'VALUE3 = 'HighlightCompr'# Variable start and end valuesSTART_COMPENSATION = 0END_COMPENSATION = 0.5START_BLACK = 0END_BLACK = 400START_HC = 100END_HC = 0extensionType = '.CR2'# Get the list of CR2 filesrawList = []
+for file in os.listdir(MYPATH):	if DEBUG:		print(file, end = '\n')
+	if file.endswith(extensionType):
+		rawList.append(file)# Number of raw files in this series
+print("Legth of the series = ", len(rawList), end='\n')
+for i, curFile in enumerate(rawList):	curCompensation = START_COMPENSATION + END_COMPENSATION * (i/len(rawList))	curBlack = int(START_BLACK + END_BLACK * (i/len(rawList)))	curHC = int(START_HC + (END_HC - START_HC) * (i/len(rawList)))	if DEBUG:		print(curFile, "curHC = ", curHC, end='\n')	with open("{}/{}.pp3".format(MYPATH, curFile), 'w') as myFile:		myFile.write("{}\n".format(HEADER1))		myFile.write("{}={}\n".format(VALUE1, curCompensation))		myFile.write("{}={}\n".format(VALUE2, curBlack))				myFile.write("{}={}\n".format(VALUE3, curHC))
